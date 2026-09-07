@@ -6,8 +6,7 @@ import {
 	getPersonSchedule,
 	getSlots,
 	setPersonSchedule,
-	setSlot,
-	msToRelative
+	setSlot
 } from '$lib/db';
 import {
 	getLunchTimes,
