@@ -19,6 +19,7 @@ import type { PageServerLoad } from './$types';
 import { RolePool } from '$lib/types';
 import { generateSchedule, generateSlotsNexus } from '$lib/schedule';
 import { getLunchTimes, getEventTimes } from '$lib/nexus';
+import { team } from '$env/static/private';
 
 export const load: PageServerLoad = async () => {
 	const appCFG = await getCFG();
@@ -54,7 +55,8 @@ export const load: PageServerLoad = async () => {
 		},
 		dateString: dateString ?? new Date().toLocaleDateString('en-US'),
 		slots,
-		sendSlackUpdates
+		sendSlackUpdates,
+		team
 	};
 };
 

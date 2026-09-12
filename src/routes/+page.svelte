@@ -3,12 +3,12 @@
 	import { Role } from '$lib/types';
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageProps } from './$types';
-	import { team } from '$lib/config';
 	import { Button, Toast } from 'flowbite-svelte';
 	import { ExclamationCircleSolid } from 'flowbite-svelte-icons';
 
 	let { data }: PageProps = $props();
 
+	let team = $derived(data.team);
 	let visible = $derived(data.scheduleVisible);
 	let isAdmin = $derived(data.isAdmin);
 	let schedule = $derived(data.schedule);

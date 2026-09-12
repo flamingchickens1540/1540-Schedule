@@ -12,6 +12,7 @@ import type { Actions } from './$types';
 import { getSlots } from '$lib/db';
 import { Role, type PersonData } from '$lib/types';
 import { getCFG } from '$lib/db';
+import { team } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ params, cookies, url }) => {
 	const personUUID = params.slug;
@@ -99,6 +100,7 @@ export const load: PageServerLoad = async ({ params, cookies, url }) => {
 		appCFG.find((v) => v.key === 'scheduleVisible')?.value == '0' ? false : true;
 
 	return {
+		team,
 		personData,
 		people,
 		schedule,

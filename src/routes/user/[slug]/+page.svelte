@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Toggle, Input, Label, Tooltip, Button, Helper, Alert, P } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
-	import { team } from '$lib/config';
 	import type { PageProps } from './$types';
 	import { Role, RolePool, type PersonData } from '$lib/types';
 	import { CheckCircleOutline } from 'flowbite-svelte-icons';
 
 	let { data }: PageProps = $props();
+	let team = $derived(data.team);
 	let people = $derived(data.people);
 	// svelte-ignore state_referenced_locally
 	let personData = $state(data.personData);

@@ -13,6 +13,7 @@ import {
 import { Role, type PersonData } from '$lib/types';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { team } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	let sessionID = cookies.get('session');
@@ -155,6 +156,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 		currentSlot,
 		nextSlot,
 		currentPerson,
-		tradeRequestData
+		tradeRequestData,
+		team
 	};
 };

@@ -1,5 +1,4 @@
-import { nexusKey } from '$env/static/private';
-import { eventKey, team } from '$lib/config';
+import { nexusKey, eventKey, team } from '$env/static/private';
 import { getCFG } from '$lib/db';
 import type { nexusData, nexusMatch } from '$lib/types';
 

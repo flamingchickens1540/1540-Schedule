@@ -2,10 +2,10 @@
 	import { goto } from '$app/navigation';
 	import type { PageProps } from './$types';
 	import { RolePool } from '$lib/types';
-	import { team } from '$lib/config';
 	import { Toggle } from 'flowbite-svelte';
 	let { data }: PageProps = $props();
 
+	var team = $derived(data.team);
 	var visible = $derived(data.scheduleVisible);
 	var sendSlackUpdates = $derived(data.sendSlackUpdates);
 	var people = $derived(data.people);
