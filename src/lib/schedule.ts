@@ -69,6 +69,13 @@ export async function generateSchedule() {
 	);
 
 	await generateRole(
+		people.filter((p) => p.rolePool != RolePool.NO_Scouting),
+		slots,
+		roleNumbers.scouting,
+		Role.Scouting
+	);
+
+	await generateRole(
 		people.filter((p) => p.preferences.doStrategy),
 		slots,
 		roleNumbers.strategy,

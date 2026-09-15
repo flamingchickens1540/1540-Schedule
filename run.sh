@@ -1,4 +1,4 @@
 forcepull
 bun i
-bun build
+bun run build
 pm2 restart ecosystem.config.cjs
