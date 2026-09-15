@@ -1,4 +1,4 @@
-git pull --force
+forcepull
 bun i
-bun run build
+bun build
 pm2 restart ecosystem.config.cjs
