@@ -39,7 +39,7 @@ export async function generateSchedule() {
 	);
 
 	const roleNumbers = {
-		scouting: 6,
+		scouting: 3,
 		pits: 3,
 		strategy: 2,
 		journalism: 1,
@@ -47,14 +47,16 @@ export async function generateSchedule() {
 	};
 
 	//add constants
-	(await getPeople()).forEach(async (person) => {
-		if (person.rolePool === RolePool.Drive)
-			await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.Drive));
-		else if (person.rolePool === RolePool.PitLead)
-			await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.PitLead));
-		else if (person.rolePool === RolePool.ONLY_Strategy)
-			await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.Strategy));
-	});
+	(await getPeople())
+		.filter((p) => p.attendingEvent)
+		.forEach(async (person) => {
+			if (person.rolePool === RolePool.Drive)
+				await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.Drive));
+			else if (person.rolePool === RolePool.PitLead)
+				await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.PitLead));
+			else if (person.rolePool === RolePool.ONLY_Strategy)
+				await setPersonSchedule(person.uuid, new Array(slots.length).fill(Role.Strategy));
+		});
 
 	//init schedules
 	people.forEach(
@@ -62,17 +64,17 @@ export async function generateSchedule() {
 	);
 
 	await generateRole(
-		people.filter((p) => p.preferences.doPits),
-		slots,
-		roleNumbers.pits,
-		Role.Pits
-	);
-
-	await generateRole(
 		people.filter((p) => p.rolePool != RolePool.NO_Scouting),
 		slots,
 		roleNumbers.scouting,
 		Role.Scouting
+	);
+
+	await generateRole(
+		people.filter((p) => p.preferences.doPits),
+		slots,
+		roleNumbers.pits,
+		Role.Pits
 	);
 
 	await generateRole(
@@ -121,6 +123,7 @@ async function generateRole(
 
 	let excessBlocks = [];
 	for (const section of sections) {
+		// sorts to prioritize people with less time
 		people.sort((a, b) => {
 			if (a.timeInRole == b.timeInRole) return b.timeInRole - a.timeInRole;
 			else return Math.random() - 0.5;
@@ -128,9 +131,11 @@ async function generateRole(
 		let i = 0;
 		for (const slot of section) {
 			const schedules = await Promise.all(people.map((p) => getPersonSchedule(p.uuid)));
+			// removes people who are already scheduled during this block
 			const availablePeople = people.filter(
 				(p, i) => schedules[i][`slot${slot.slotNumber}`] === Role.Open
 			);
+			// assigns people to role either until there is enough assigned people or there are not enough remaining people
 			for (let j = i; j < i + numPeoplePerSlot; j++) {
 				if (j >= availablePeople.length) {
 					excessBlocks.push(slot);
@@ -150,6 +155,7 @@ async function generateRole(
 
 	let i = 0;
 	excessBlocks.sort(() => Math.random() - 0.5);
+	// goes through slots that ran out of people to add remaining people based on who has less time
 	for (const slot of excessBlocks) {
 		const schedules = await Promise.all(people.map((p) => getPersonSchedule(p.uuid)));
 		let availablePeople = people

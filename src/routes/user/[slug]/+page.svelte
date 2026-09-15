@@ -316,7 +316,7 @@
 						>Must be your catlin email or you will be locked out of your account</Helper
 					>
 				</div>
-				<div class="w-70">
+				<!-- <div class="w-70">
 					<Label for="phone">Phone Number</Label>
 					<Input
 						type="number"
@@ -328,7 +328,7 @@
 					<Helper class="mt-2 text-xs"
 						>Optional | Used to send SMS messages with updates (not currently functional)</Helper
 					>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<div class="item flex flex-col gap-2">
