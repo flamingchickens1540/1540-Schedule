@@ -182,12 +182,12 @@
 			color="green"
 			class="nunito text-3xl">Attending Event</Toggle
 		>
-		<Toggle
+		<!-- <Toggle
 			bind:checked={personData.attendingLoadIn}
 			size="large"
 			color="green"
 			class="nunito text-3xl">Wants to attend load in</Toggle
-		>
+		> -->
 		<div class="flex items-center gap-2">
 			Role Pool:
 			<Button

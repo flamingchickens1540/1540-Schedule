@@ -2,6 +2,7 @@ import {
 	getIncomingRequests,
 	getNamesInRole,
 	getPeople,
+	getPerson,
 	getSchedule,
 	isValidSession,
 	updatePerson
@@ -15,7 +16,10 @@ import { getCFG } from '$lib/db';
 import { team } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ params, cookies, url }) => {
-	const personUUID = params.slug;
+	const personUUID = params.slug.includes('-')
+		? params.slug
+		: (await getPeople()).find((p) => p.email == params.slug + '@catlin.edu')?.uuid;
+	if (!personUUID) return await redirect(303, '/');
 	const sessionID = cookies.get('session') ?? '';
 	const adminSession = cookies.get('adminSession') ?? '';
 	const isPerson = await isValidSession(sessionID, personUUID);
