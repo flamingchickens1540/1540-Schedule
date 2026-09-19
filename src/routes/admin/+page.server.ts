@@ -166,8 +166,8 @@ export const actions = {
 		const startTimeString = data.get('startTimestamp')?.toString();
 		const endLabel = data.get('endLabel')?.toString();
 		const endTimeString = data.get('endTimestamp')?.toString();
-		const allowUpdate = data.get('allowUpdates')?.toString() === 'true';
-		const doScouting = data.get('doScouting')?.toString() === 'true';
+		const allowUpdate = data.get('allowUpdates')?.toString() != 'false';
+		const doScouting = data.get('doScouting')?.toString() != 'false';
 		if (!slotString || !startTimeString || !endTimeString) return fail(400);
 		let slotNumber = parseInt(slotString);
 		if (startLabel == 'remove' || endLabel == 'remove') {

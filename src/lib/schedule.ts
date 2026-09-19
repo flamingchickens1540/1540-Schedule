@@ -198,7 +198,10 @@ export async function updateSlotTiming() {
 				`Updated slot ${slot.startLabel}-${slot.endLabel} to start at ${new Date(startMatchTime).toLocaleTimeString('en-US', { hour12: false })}`
 			);
 			slot.startTimestamp = startMatchTime;
-		}
+		} else
+			console.log(
+				`Slot ${slot.startLabel}-${slot.endLabel} nexus starts at ${new Date(startMatchTime ?? 'null').toLocaleTimeString('en-US', { hour12: false })} and claims ${new Date(slot.startTimestamp).toLocaleTimeString('en-US', { hour12: false })}`
+			);
 		let endMatchTime = matches.find((match) => formatMatchLabel(match.label) == slot.endLabel)
 			?.times.estimatedStartTime;
 		if (endMatchTime && endMatchTime != slot.endTimestamp) {
@@ -206,7 +209,10 @@ export async function updateSlotTiming() {
 				`Updated slot ${slot.startLabel}-${slot.endLabel} to end at ${new Date(endMatchTime).toLocaleTimeString('en-US', { hour12: false })}`
 			);
 			slot.endTimestamp = endMatchTime;
-		}
+		} else
+			console.log(
+				`Slot ${slot.startLabel}-${slot.endLabel} nexus ends at ${new Date(startMatchTime ?? 'null').toLocaleTimeString('en-US', { hour12: false })} and claims ${new Date(slot.startTimestamp).toLocaleTimeString('en-US', { hour12: false })}`
+			);
 		await setSlot(slot);
 	}
 	console.log('Finished');
