@@ -1,8 +1,10 @@
-import { getNamesInRole, msToSlot } from '$lib/db';
+import { getCFG, getNamesInRole, msToSlot } from '$lib/db';
 import { Role } from '$lib/types';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async () => {
+	if (!((await getCFG()).find((v) => v.key === 'scheduleVisible')?.value == '0' ? false : true))
+		return json({ slot: null, pits: [], leads: [] });
 	const slot = await msToSlot(Date.now());
 	if (!slot) return json({ slot: null, pits: [], leads: [] });
 	let pits = await getNamesInRole(Role.Pits, slot.num);
