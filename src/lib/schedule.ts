@@ -106,12 +106,14 @@ async function generateRole(
 	role: Role
 ) {
 	if (people.length < 1) return;
-	const slots = slotsRaw.map((slot) => {
-		return {
-			peopleInRole: 0,
-			...slot
-		};
-	});
+	const slots = slotsRaw
+		.map((slot) => {
+			return {
+				peopleInRole: 0,
+				...slot
+			};
+		})
+		.filter((slot) => (role == Role.Scouting ? slot.doScouting : 1));
 	const avgBlocks = Math.max(Math.floor((slots.length * numPeoplePerSlot) / people.length), 1);
 
 	const secSize = Math.ceil(slots.length / avgBlocks);
