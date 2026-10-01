@@ -16,7 +16,7 @@ import {
 	getEventTimes,
 	lastMatch as getLastMatch
 } from '$lib/nexus';
-import { Role, RolePool, type PersonData, type slotData } from '$lib/types';
+import { Role, RolePool, type slotData } from '$lib/types';
 
 export async function generateSchedule() {
 	await clearSchedule();
@@ -39,7 +39,7 @@ export async function generateSchedule() {
 	);
 
 	const roleNumbers = {
-		scouting: 3,
+		scouting: 6,
 		pits: 3,
 		strategy: 2,
 		journalism: 1,
