@@ -3,6 +3,7 @@
 	import type { PageProps } from './$types';
 	import { RolePool } from '$lib/types';
 	import { Toggle } from 'flowbite-svelte';
+	import { resolve } from '$app/paths';
 	let { data }: PageProps = $props();
 
 	var team = $derived(data.team);
@@ -167,7 +168,9 @@
 					<div
 						class="mb-1 flex items-center justify-between rounded-xl border border-(--white) p-2"
 					>
-						<p>{person.displayName}</p>
+						<button onclick={() => goto(resolve(`/user/${person.uuid}`))}
+							>{person.displayName}</button
+						>
 						<div class="flex h-fit items-center justify-around gap-1">
 							<form action="?/updateStatus" method="post">
 								<input type="hidden" class="textInput" name="id" value={person.uuid} />

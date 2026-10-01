@@ -4,6 +4,7 @@
 	import type { PageProps } from './$types';
 	import { Role, RolePool, type PersonData } from '$lib/types';
 	import { CheckCircleOutline } from 'flowbite-svelte-icons';
+	import { onMount } from 'svelte';
 
 	let { data }: PageProps = $props();
 	let team = $derived(data.team);
@@ -159,6 +160,11 @@
 			`/user/${personData.uuid}?success=true&successMsg=Accepted ${incomingTradeRequest.person}'s Trade Request`
 		);
 	}
+
+	onMount(() => {
+		personData.arrivingTimestamp = data.arrivingTimeStr;
+		personData.leavingTimestamp = data.leavingTimeStr;
+	});
 </script>
 
 <nav class="mb-5 flex h-fit max-w-screen items-center justify-between bg-(--white) p-2 pr-5 pl-5">
@@ -329,6 +335,34 @@
 						>Optional | Used to send SMS messages with updates (not currently functional)</Helper
 					>
 				</div> -->
+				<div class="w-70">
+					<Label for="arriveTime">Time Arriving</Label>
+					<Input
+						aria-describedby="helper-text-explanation"
+						type="text"
+						id="arriveTime"
+						placeholder="Event Start"
+						class="nunito"
+						bind:value={personData.arrivingTimestamp}
+					/>
+					<Helper class="mt-2 text-xs"
+						>The time you are arriving, leave empty if you are arriving at the start</Helper
+					>
+				</div>
+				<div class="w-70">
+					<Label for="leaveTime">Time Leaving</Label>
+					<Input
+						aria-describedby="helper-text-explanation"
+						type="text"
+						id="leaveTime"
+						placeholder="Event End"
+						class="nunito"
+						bind:value={personData.leavingTimestamp}
+					/>
+					<Helper class="mt-2 text-xs"
+						>The time you are leaving, leave empty if you are leaving at the end</Helper
+					>
+				</div>
 			</div>
 		</div>
 		<div class="item flex flex-col gap-2">

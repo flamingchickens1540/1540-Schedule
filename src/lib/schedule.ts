@@ -16,7 +16,7 @@ import {
 	getEventTimes,
 	lastMatch as getLastMatch
 } from '$lib/nexus';
-import { Role, RolePool, type slotData } from '$lib/types';
+import { Role, RolePool, type PersonData, type slotData } from '$lib/types';
 
 export async function generateSchedule() {
 	await clearSchedule();
@@ -135,7 +135,10 @@ async function generateRole(
 			const schedules = await Promise.all(people.map((p) => getPersonSchedule(p.uuid)));
 			// removes people who are already scheduled during this block
 			const availablePeople = people.filter(
-				(p, i) => schedules[i][`slot${slot.slotNumber}`] === Role.Open
+				(p, i) =>
+					schedules[i][`slot${slot.slotNumber}`] === Role.Open &&
+					(!p.arrivingTimestamp || p.arrivingTimestamp < slot.startTimestamp) &&
+					(!p.leavingTimestamp || p.leavingTimestamp > slot.endTimestamp)
 			);
 			// assigns people to role either until there is enough assigned people or there are not enough remaining people
 			for (let j = i; j < i + numPeoplePerSlot; j++) {
@@ -161,7 +164,12 @@ async function generateRole(
 	for (const slot of excessBlocks) {
 		const schedules = await Promise.all(people.map((p) => getPersonSchedule(p.uuid)));
 		let availablePeople = people
-			.filter((p, i) => schedules[i][`slot${slot.slotNumber}`] === Role.Open)
+			.filter(
+				(p, i) =>
+					schedules[i][`slot${slot.slotNumber}`] === Role.Open &&
+					(!p.arrivingTimestamp || p.arrivingTimestamp < slot.startTimestamp) &&
+					(!p.leavingTimestamp || p.leavingTimestamp > slot.endTimestamp)
+			)
 			.sort((a, b) => {
 				if (a.timeInRole == b.timeInRole) return b.timeInRole - a.timeInRole;
 				else return Math.random() - 0.5;

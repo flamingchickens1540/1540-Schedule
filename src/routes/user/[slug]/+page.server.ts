@@ -2,7 +2,6 @@ import {
 	getIncomingRequests,
 	getNamesInRole,
 	getPeople,
-	getPerson,
 	getSchedule,
 	isValidSession,
 	updatePerson
@@ -103,6 +102,15 @@ export const load: PageServerLoad = async ({ params, cookies, url }) => {
 	const scheduleVisible =
 		appCFG.find((v) => v.key === 'scheduleVisible')?.value == '0' ? false : true;
 
+	const arrivingTimeStr = new Date(personData.arrivingTimestamp).toLocaleTimeString('en-US', {
+		hour12: false,
+		timeStyle: 'short'
+	});
+	const leavingTimeStr = new Date(personData.leavingTimestamp).toLocaleTimeString('en-US', {
+		hour12: false,
+		timeStyle: 'short'
+	});
+
 	return {
 		team,
 		personData,
@@ -113,7 +121,9 @@ export const load: PageServerLoad = async ({ params, cookies, url }) => {
 		tradeRequestData,
 		showSuccess,
 		successMsg,
-		scheduleVisible
+		scheduleVisible,
+		arrivingTimeStr,
+		leavingTimeStr
 	};
 };
 
@@ -122,7 +132,26 @@ export const actions = {
 		const data = await request.formData();
 		const personDataString = data.get('personData')?.toString();
 		if (!personDataString) return fail(400);
-		const personData = JSON.parse(personDataString) as PersonData;
-		updatePerson(personData);
+		const personData = JSON.parse(personDataString);
+
+		if (personData.arrivingTimestamp && personData.arrivingTimestamp != '') {
+			const cfg = await getCFG();
+			const date = new Date(cfg.find((v) => v.key == 'date')?.value as string);
+			const timeSplit = personData.arrivingTimestamp.split(':');
+			date.setHours(parseInt(timeSplit[0]), parseInt(timeSplit[1]), 0, 0);
+			const timeMS = date.getTime();
+			personData.arrivingTimestamp = timeMS;
+		}
+
+		if (personData.leavingTimestamp && personData.leavingTimestamp != '') {
+			const cfg = await getCFG();
+			const date = new Date(cfg.find((v) => v.key == 'date')?.value as string);
+			const timeSplit = personData.leavingTimestamp.split(':');
+			date.setHours(parseInt(timeSplit[0]), parseInt(timeSplit[1]), 0, 0);
+			const timeMS = date.getTime();
+			personData.leavingTimestamp = timeMS;
+		}
+
+		updatePerson(personData as PersonData);
 	}
 } satisfies Actions;

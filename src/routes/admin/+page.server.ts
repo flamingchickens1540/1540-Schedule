@@ -170,10 +170,7 @@ export const actions = {
 		const doScouting = data.get('doScouting')?.toString() != 'false';
 		if (!slotString || !startTimeString || !endTimeString) return fail(400);
 		let slotNumber = parseInt(slotString);
-		if (startLabel == 'remove' || endLabel == 'remove') {
-			console.log('remove!');
-			return await removeSlot(slotNumber);
-		}
+		if (startLabel == 'remove' || endLabel == 'remove') return await removeSlot(slotNumber);
 		let startTimestamp = new Date(startTimeString).getTime();
 		let endTimestamp = new Date(endTimeString).getTime();
 		await setSlot({

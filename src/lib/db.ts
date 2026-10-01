@@ -28,7 +28,9 @@ export async function initDB() {
 			attendingEvent BOOLEAN,
 			attendingLoadIn BOOLEAN,
 			rolePool TEXT,
-			preferences JSON
+			preferences JSON,
+			arrivingTimestamp LONG,
+			leavingTimestamp LONG
 		)
 	`);
 
@@ -87,7 +89,7 @@ export async function initDB() {
 }
 
 export async function getPeople(): Promise<PersonData[]> {
-	const res = db.prepare('SELECT * FROM people ORDER BY firstName').all() as PersonData[];
+	const res = db.prepare('SELECT * FROM people ORDER BY displayName').all() as PersonData[];
 	return res.map((data) => {
 		return {
 			...data,
@@ -99,7 +101,7 @@ export async function getPeople(): Promise<PersonData[]> {
 
 export async function getPeopleAtEvent(): Promise<PersonData[]> {
 	const res = db
-		.prepare('SELECT * FROM people WHERE attendingEvent = true ORDER BY firstName')
+		.prepare('SELECT * FROM people WHERE attendingEvent = true ORDER BY displayName')
 		.all() as PersonData[];
 	return res.map((data) => {
 		return {
@@ -113,7 +115,7 @@ export async function getPeopleAtEvent(): Promise<PersonData[]> {
 export async function addPerson(data: { firstName: string; lastName: string; email: string }) {
 	const personUUID = Bun.randomUUIDv7();
 	await db
-		.prepare('INSERT OR REPLACE INTO people VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+		.prepare('INSERT OR REPLACE INTO people VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
 		.run(
 			personUUID,
 			data.firstName,
@@ -124,7 +126,9 @@ export async function addPerson(data: { firstName: string; lastName: string; ema
 			false,
 			false,
 			RolePool.None,
-			JSON.stringify({})
+			JSON.stringify({}),
+			null,
+			null
 		);
 	await formatName(data.firstName, data.lastName);
 	return personUUID;
@@ -132,7 +136,7 @@ export async function addPerson(data: { firstName: string; lastName: string; ema
 
 export async function updatePerson(data: PersonData) {
 	await db
-		.prepare('INSERT OR REPLACE INTO people VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+		.prepare('INSERT OR REPLACE INTO people VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
 		.run(
 			data.uuid,
 			data.firstName,
@@ -143,7 +147,9 @@ export async function updatePerson(data: PersonData) {
 			data.attendingEvent,
 			data.attendingLoadIn,
 			data.rolePool,
-			JSON.stringify(data.preferences)
+			JSON.stringify(data.preferences),
+			data.arrivingTimestamp,
+			data.leavingTimestamp
 		);
 	await formatName(data.firstName, data.lastName);
 	return data.uuid;
