@@ -102,14 +102,18 @@ export const load: PageServerLoad = async ({ params, cookies, url }) => {
 	const scheduleVisible =
 		appCFG.find((v) => v.key === 'scheduleVisible')?.value == '0' ? false : true;
 
-	const arrivingTimeStr = new Date(personData.arrivingTimestamp).toLocaleTimeString('en-US', {
-		hour12: false,
-		timeStyle: 'short'
-	});
-	const leavingTimeStr = new Date(personData.leavingTimestamp).toLocaleTimeString('en-US', {
-		hour12: false,
-		timeStyle: 'short'
-	});
+	const arrivingTimeStr = personData.arrivingTimestamp
+		? new Date(personData.arrivingTimestamp).toLocaleTimeString('en-US', {
+				hour12: false,
+				timeStyle: 'short'
+			})
+		: '';
+	const leavingTimeStr = personData.leavingTimestamp
+		? new Date(personData.leavingTimestamp).toLocaleTimeString('en-US', {
+				hour12: false,
+				timeStyle: 'short'
+			})
+		: '';
 
 	return {
 		team,
