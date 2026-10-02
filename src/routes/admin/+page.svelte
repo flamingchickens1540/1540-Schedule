@@ -4,6 +4,7 @@
 	import { RolePool } from '$lib/types';
 	import { Toggle } from 'flowbite-svelte';
 	import { resolve } from '$app/paths';
+	import { enhance } from '$app/forms';
 	let { data }: PageProps = $props();
 
 	var team = $derived(data.team);
@@ -172,7 +173,7 @@
 							>{person.displayName}</button
 						>
 						<div class="flex h-fit items-center justify-around gap-1">
-							<form action="?/updateStatus" method="post">
+							<form action="?/updateStatus" method="post" use:enhance>
 								<input type="hidden" class="textInput" name="id" value={person.uuid} />
 								<button id="submit" class={person.attendingEvent ? 'button-green' : 'button-red'}>
 									{person.attendingEvent ? 'Attending' : 'Missing'}

@@ -305,8 +305,7 @@ export async function generateSlotsDummy() {
 	await clearSlots();
 	const eventTimes = await getEventTimes();
 	let startTimestamp = eventTimes.dayStart.time;
-	let endTimestamp =
-		startTimestamp + Math.floor(Math.random() * (60 * 60 * 1000 - 20 * 60 * 1000)) + 20 * 60 * 1000;
+	let endTimestamp = startTimestamp + 60 * 1000;
 	for (let id = 1; id <= 11; id++) {
 		if (startTimestamp >= eventTimes.dayEnd.time) break;
 		else if (endTimestamp > eventTimes.dayEnd.time) endTimestamp = eventTimes.dayEnd.time;
@@ -320,6 +319,6 @@ export async function generateSlotsDummy() {
 			doScouting: true
 		});
 		startTimestamp = endTimestamp;
-		endTimestamp += Math.floor(Math.random() * (60 * 60 * 1000 - 20 * 60 * 1000)) + 20 * 60 * 1000;
+		endTimestamp += 60 * 1000;
 	}
 }
